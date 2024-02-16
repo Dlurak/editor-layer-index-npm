@@ -1,13 +1,17 @@
 {
   "name": "@dlurak/editor-layer-index",
-  "version": "0.0.2",
-  "description": "",
+  "version": "0.0.4",
+  "description": "A version of the editor layer index that is installable via NPM.",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dlurak/editor-layer-index-npm"
+  },
   "author": "osmlab",
   "license": "CC BY-SA 3.0",
   "files": [
