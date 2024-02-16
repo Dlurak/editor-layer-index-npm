@@ -1,0 +1,19 @@
+{
+  "name": "@dlurak/editor-layer-index",
+  "version": "0.0.2",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "osmlab",
+  "license": "CC BY-SA 3.0",
+  "files": [
+	  "static/imagery.json"
+  ],
+  "dependencies": {
+    "zod": "^3.22.4"
+  }
+}
