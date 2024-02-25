@@ -1,0 +1,68 @@
+name: Update data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 0" # This will run every Sunday at midnight UTC
+
+jobs:
+  Update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update static data
+        run: ./scripts/update.sh
+
+      - name: Check for Changes
+        id: check_changes
+        run: |
+          git diff --exit-code || echo "::set-output name=changes::true"
+
+    Release:
+      runs-on: ubuntu-latest
+      needs: update
+      if: steps.check_changes.outputs.changes == 'true'
+      steps:
+        - name: Setup node
+          uses: actions/setup-node@v3
+          with:
+            node-version: 18
+
+        - name: Update Version
+          run: node scripts/updateVersion.js
+
+        - name: Commit Changes
+          run: |
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add .
+            git commit -m "Update layer index data"
+
+        - name: Push Changes
+          uses: ad-m/github-push-action@master
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            branch: ${{ github.ref_name }}
+
+        - name: Create Release
+          id: create_release
+          uses: actions/create-release@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            tag_name: ${{ github.ref }}
+            release_name: Release ${{ github.ref }}
+            body: Update the data according to the original layer index
+            draft: false
+            prerelease: false
+
+        - name: Publish to NPM
+          uses: pascalgn/npm-publish-action@1.3.9
+          with:
+            publish_command: "npm"
+            publish_args: "--access public"
+          env: # More info about the environment variables in the README
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
+            NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
