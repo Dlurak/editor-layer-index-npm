@@ -1,6 +1,8 @@
 name: Update data
 
 on:
+  push:
+    branches: actions
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * 0" # This will run every Sunday at midnight UTC
