@@ -22,7 +22,7 @@ jobs:
         run: |
           git diff --exit-code || echo "::set-output name=changes::true"
 
-    Release:
+  Release:
       runs-on: ubuntu-latest
       needs: update
       if: steps.check_changes.outputs.changes == 'true'
